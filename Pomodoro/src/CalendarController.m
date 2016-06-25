@@ -86,8 +86,9 @@ static EKEventStore *eventStore = nil;
         
         float startTime = ((duration  / 15 ) * 15 );
         
-        
-		[CalendarHelper publishEvent:_selectedCalendar withTitle:[self bindCommonVariables:@"calendarEnd"] duration:startTime];
+        if(startTime >= 15) {
+            [CalendarHelper publishEvent:_selectedCalendar withTitle:[self bindCommonVariables:@"calendarEnd"] duration:startTime];
+            }
 	}
 
 }

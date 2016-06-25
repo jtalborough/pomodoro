@@ -449,6 +449,7 @@
 	
 
     Pomodoro* pomo = [notification object];
+    
 	[stats.pomos newPomodoro:lround(pomo.realDuration/60.0) withExternalInterruptions:pomo.externallyInterrupted withInternalInterruptions: pomo.internallyInterrupted];
 	
 	if (![self checkDefault:@"mute"] && [self checkDefault:@"ringAtEndEnabled"]) {
