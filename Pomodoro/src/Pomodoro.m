@@ -202,13 +202,19 @@
 }
 
 -(void) interruptFinished:(NSTimer *)aTimer {
-
+    
     [self clearTimer: &oneSecTimer];
     [self clearTimer: &interruptionTimer];
 	state = PomoReadyToStart;
+    if ([delegate respondsToSelector: @selector(pomodoroInterruptionMaxTimeIsOver:)]) {
+        [delegate pomodoroFinished:self];
+    }
+    /*
 	if ([delegate respondsToSelector: @selector(pomodoroInterruptionMaxTimeIsOver:)]) {
         [delegate pomodoroInterruptionMaxTimeIsOver:self];		
 	}
+    */
+    
 }
 
 -(void)dealloc {

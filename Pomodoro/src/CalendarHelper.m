@@ -51,8 +51,10 @@ static EKEventStore *eventStore = nil;
     EKEvent *evt = [EKEvent eventWithEventStore:eventStore];
     [evt setCalendar:calendar];
     evt.title = title;
-    evt.startDate = [[NSDate date] dateByAddingTimeInterval:(-60 * duration)];
-    evt.endDate = [NSDate date];
+
+    
+    evt.startDate = [[self dateToNearest15Minutes] dateByAddingTimeInterval:(-60 * duration)];
+    evt.endDate = [self dateToNearest15Minutes];
     
     NSError *calError;
     //add the calendar to the calendars store and catch error if occur
@@ -67,6 +69,21 @@ static EKEventStore *eventStore = nil;
 
     }
 }
+
++ (NSDate *)dateToNearest15Minutes {
+    // Set up flags.
+    unsigned unitFlags = NSCalendarUnitYear| NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekOfYear |  NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond | NSCalendarUnitWeekday | NSCalendarUnitWeekdayOrdinal;
+    // Extract components.
+    NSDateComponents *comps = [[NSCalendar currentCalendar] components:unitFlags fromDate:[NSDate date]];
+    // Set the minute to the nearest 15 minutes.
+    [comps setMinute:((([comps minute] - 8 ) / 15 ) * 15 ) + 15];
+    // Zero out the seconds.
+    [comps setSecond:0];
+    // Construct a new date.
+    return [[NSCalendar currentCalendar] dateFromComponents:comps];
+}
+
+
 + (void) publishEvent: (NSString*)selectedCalendar withTitle:(NSString*)title duration:(int)duration {
     
     if ([EKEventStore respondsToSelector:@selector(authorizationStatusForEntityType:)]) {

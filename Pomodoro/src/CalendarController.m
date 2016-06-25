@@ -74,7 +74,20 @@ static EKEventStore *eventStore = nil;
 	if ([self checkDefault:@"calendarEnabled"]) {
         Pomodoro* pomo = [notification object];
         int duration = (int)lround(pomo.realDuration/60.0);
-		[CalendarHelper publishEvent:_selectedCalendar withTitle:[self bindCommonVariables:@"calendarEnd"] duration:duration];
+        if (duration < 8)
+            {
+            duration = 0;
+            }
+        else if (duration < 15)
+            {
+            duration = 15;
+            }
+        
+        
+        float startTime = ((duration  / 15 ) * 15 );
+        
+        
+		[CalendarHelper publishEvent:_selectedCalendar withTitle:[self bindCommonVariables:@"calendarEnd"] duration:startTime];
 	}
 
 }
