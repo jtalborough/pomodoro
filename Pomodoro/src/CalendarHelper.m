@@ -42,7 +42,7 @@ static EKEventStore *eventStore = nil;
     //if the calendar is not found
     //create a new calendar with selected name
     if (calendar == NULL){
-        calendar = [EKCalendar calendarForEntityType:EKEntityMaskEvent eventStore:eventStore];
+        calendar = [EKCalendar calendarForEntityType:EKEntityTypeEvent eventStore:eventStore];
         [calendar setTitle:selectedCalendar];
 
     }
@@ -86,8 +86,6 @@ static EKEventStore *eventStore = nil;
 
 + (void) publishEvent: (NSString*)selectedCalendar withTitle:(NSString*)title duration:(int)duration {
     
-    if ([EKEventStore respondsToSelector:@selector(authorizationStatusForEntityType:)]) {
-        // 10.9 style
         if (eventStore == nil){ 
             eventStore = [[EKEventStore alloc] init];
         }
@@ -95,13 +93,6 @@ static EKEventStore *eventStore = nil;
             // completion
             [self createEvent:eventStore forSelectedCalendar:selectedCalendar withTitle:title duration:duration];
         }];
-    } else {
-        // 10.8 style
-        if (eventStore == nil) {
-            eventStore = [[EKEventStore alloc] initWithAccessToEntityTypes:EKEntityMaskEvent ];
-            [self createEvent:eventStore forSelectedCalendar:selectedCalendar withTitle:title duration:duration];
-        }
-    }
     
 }
 @end

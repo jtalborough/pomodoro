@@ -37,10 +37,9 @@ static EKEventStore *eventStore = nil;
 
 - (IBAction)initCalendars:(id)sender {
     [calendarsCombo removeAllItems];
-    
-    if ([EKEventStore respondsToSelector:@selector(authorizationStatusForEntityType:)]) {
-        // 10.9 style
-        eventStore = [[EKEventStore alloc] init];
+
+    // 10.9 style
+    eventStore = [[EKEventStore alloc] init];
         
         NSArray* cals = [eventStore calendarsForEntityType:EKEntityTypeEvent];
 
@@ -51,21 +50,7 @@ static EKEventStore *eventStore = nil;
             }
         }
         
-    } else {
-        // 10.8 style
-        eventStore = [[EKEventStore alloc] initWithAccessToEntityTypes:EKEntityMaskEvent ];
-        
-        NSArray* cals = [eventStore calendarsForEntityType:EKEntityTypeEvent            ];
-        
-        for (EKCalendar* calendar in cals){
-            [calendarsCombo addItemWithObjectValue:[calendar title]];
-            if ([[calendar title] isEqual:_selectedCalendar]){
-                [calendarsCombo selectItemWithObjectValue:[calendar title]];
-            }
-        }
     }
-
-}
 
 #pragma mark ---- Pomodoro notifications methods ----
 
@@ -76,7 +61,7 @@ static EKEventStore *eventStore = nil;
         int duration = (int)lround(pomo.realDuration/60.0);
         if (duration < 8)
             {
-            duration = 0;
+            duration = 0;   
             }
         else if (duration < 15)
             {
@@ -86,8 +71,9 @@ static EKEventStore *eventStore = nil;
         
         float startTime = ((duration  / 15 ) * 15 );
         
+        NSString *nTitle = [NSString stringWithFormat:@"%1.0f: %@", startTime, [self bindCommonVariables:@"calendarEnd"] ];
         if(startTime >= 15) {
-            [CalendarHelper publishEvent:_selectedCalendar withTitle:[self bindCommonVariables:@"calendarEnd"] duration:startTime];
+            [CalendarHelper publishEvent:_selectedCalendar withTitle:nTitle duration:startTime];
             }
 	}
 
